@@ -6,18 +6,12 @@ const hours = document.getElementById("hour");
 const minutes = document.getElementById("min");
 const selectZone = document.querySelector(".select-zone");
 
-// creating vaiables 
-let hour = null,
-min = null,
-sec = null;
-let alarmArray = new Array();
-
 // Function to show the current time on  the window
 const time = () =>{
     const date = new Date();
-    hour = String(date.getHours()).padStart(2,"0");
-    min = String(date.getMinutes()).padStart(2,"0");
-    sec = String(date.getSeconds()).padStart(2,"0");
+    let hour = String(date.getHours()).padStart(2,"0");
+    let min = String(date.getMinutes()).padStart(2,"0");
+    let sec = String(date.getSeconds()).padStart(2,"0");
     
     const amOrPm = hour >= 12 ? `<span>PM</span>` : `<span>AM</span>`;
     hour = (hour % 12) || 12;
@@ -53,7 +47,6 @@ setAlarmBtn.addEventListener('click', (e) =>{
     listItems.innerHTML = `<h3>${alarmHour}:${alarmMinute} ${selectZone.value}</h3>`;
     alarmList.appendChild(listItems);
     deleteAlarm(listItems);
-    // checkAlarm();
 });
 
 // function to delete alarms added in the list
@@ -73,17 +66,18 @@ const deleteAlarm = (listItems) =>{
 let triggeredAlarms = {};
 const checkAlarm = () => {
     const date = new Date();
-    const currentHour = String(date.getHours()).padStart(2, "0");
-    const currentMinute = String(date.getMinutes()).padStart(2, "0");
-    const currentZone = date.getHours() >= 12 ? 'PM' : 'AM';
-
+    let currentHour = String(date.getHours()).padStart(2, "0");
+    let currentMinute = String(date.getMinutes()).padStart(2, "0");
+    let currentZone = date.getHours() >= 12 ? 'PM' : 'AM';
+    currentHour = (currentHour % 12) || 12;
+    if(currentHour < 10){
+        currentHour = String(currentHour).padStart(2,"0")
+    }
     // Loop through each alarm set in the list
     const alarms = document.querySelectorAll(".list-item");
     alarms.forEach(alarm => {
         const alarmTime = alarm.querySelector('h3').textContent.trim();
         const [alarmHour, alarmMinute, alarmZone] = alarmTime.split(/:| /);
-        // console.log(`${alarmHour}`);
-
         // Compare the alarm time with the current time
         if (
             currentHour === alarmHour &&
